@@ -1,0 +1,17 @@
+{
+  "name": "framify",
+  "version": "1.0.0",
+  "description": "Simple web app to download and display email attachment photos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lance Leavitt",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "image-size": "^1.0.0",
+    "mail-listener5": "^2.0.2"
+  }
+}

@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <style>
+            body, html {
+                height: 100%;
+                background-color: #000;
+            }
+            .center { 
+                height: 100%;
+                position: relative;
+                background-color: #000
+            }
+            #photoDisplay{
+                margin: 0;
+                position: absolute;
+                height: 100%;
+                width: auto;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div  class="center">
+            <img id="photoDisplay"/>
+        </div>
+        <div id="testing"></div>
+        <script>
+            var images = [{image:'asdfasdfad'}];
+            var index = 0;
+            function arrayBufferToBase64(buffer) {
+                var binary = '';
+                var bytes = [].slice.call(new Uint8Array(buffer));
+                bytes.forEach((b) => binary += String.fromCharCode(b));
+                return window.btoa(binary);
+            };
+            function updateDisplay() {
+                if(index+1 >= images.length){
+                    index = -1;
+                }
+                index+=1;
+                // console.log(images[index])
+                let imgEl = document.getElementById("photoDisplay")
+                if(images[index].width > images[index].height){
+                    imgEl.style.width = '100%'
+                    imgEl.style.height = 'auto'
+                }
+                else{
+                    imgEl.style.height = '100%'
+                    imgEl.style.width = 'auto'
+                }
+                imgEl.src = images[index].image;
+            }
+            function getNewImageList(){
+                images = []
+                fetch("http://localhost:3000/slideDeck").then((res) => 
+                res.json()
+            ).then((json) => {
+                var base64Flag = 'data:image/jpeg;base64,';
+                console.log(json)
+                for(img of json){
+                    // console.log(img.data.data)
+                    var imageData = arrayBufferToBase64(img.data.data);
+                    images.push({image: base64Flag+imageData,
+                                    height: img.height,
+                                    width: img.width})
+                }
+                // console.log(images)
+            })}
+            getNewImageList()
+            setInterval(getNewImageList, 600000)
+            setInterval(updateDisplay, 10000)
+        </script>
+    </body>
+</html>
