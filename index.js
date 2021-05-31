@@ -17,15 +17,14 @@ app.get('/slideDeck', (req, res) => {
     console.log("SlideDeck requested. Current folder:" + __dirname);
     var images=[];
     try {
-        const files = fs.readdirSync("./"+mailListener.attachmentOptions.directory);
-    
+        const files = fs.readdirSync(mailListener.attachmentOptions.directory);
         // files object contains all files names
         // log them on console
         files.forEach(file => {
             // console.log(file)
-            let dim = imageSize("./"+mailListener.attachmentOptions.directory+"/"+file)
+            let dim = imageSize(mailListener.attachmentOptions.directory+"/"+file)
             // console.log(dim)
-            images.push({data:fs.readFileSync("./"+mailListener.attachmentOptions.directory+"/"+file),
+            images.push({data:fs.readFileSync(mailListener.attachmentOptions.directory+"/"+file),
                             height: dim.height,
                             width: dim.width})
         });
