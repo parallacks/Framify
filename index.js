@@ -17,14 +17,14 @@ app.get('/slideDeck', (req, res) => {
     console.log("SlideDeck requested. Current folder:" + __dirname);
     var images=[];
     try {
-        const files = fs.readdirSync(__dirname+mailListener.attachmentOptions.directory);
+        const files = fs.readdirSync(__dirname+"/"+mailListener.attachmentOptions.directory);
         // files object contains all files names
         // log them on console
         files.forEach(file => {
             // console.log(file)
-            let dim = imageSize(__dirname+mailListener.attachmentOptions.directory+"/"+file)
+            let dim = imageSize(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file)
             // console.log(dim)
-            images.push({data:fs.readFileSync(__dirname+mailListener.attachmentOptions.directory+"/"+file),
+            images.push({data:fs.readFileSync(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file),
                             height: dim.height,
                             width: dim.width})
         });
@@ -68,17 +68,17 @@ mailListener.on("attachment", async function(att, path, seqno){
     console.log(att);
     console.log(path)
     if(att.contentType.includes('image')){
-        await fs.writeFile(`${mailListener.attachmentOptions.directory}${att.filename}`, att.content, (error) =>{
+        await fs.writeFile(`${__dirname}/${mailListener.attachmentOptions.directory}${att.filename}`, att.content, (error) =>{
             console.log('error', error);
           });
-          var files = fs.readdirSync(mailListener.attachmentOptions.directory)
+          var files = fs.readdirSync(__dirname+"/"+mailListener.attachmentOptions.directory)
           if (files.length > 30){
             var filesToMove = []
             for(var file of files){
-                let seconds = fs.stat(`${mailListener.attachmentOptions.directory}${file}`, function(err, stats){
+                let seconds = fs.stat(`${__dirname}/${mailListener.attachmentOptions.directory}${file}`, function(err, stats){
                     return (new Date().getTime() - stats.mtime) / 1000;
                 });
-                let tempFile = {path: `${mailListener.attachmentOptions.directory}${file}`,
+                let tempFile = {path: `${__dirname}/${mailListener.attachmentOptions.directory}${file}`,
                             name: file,
                             age: seconds}
                 if (tempFile.age > 86400){
@@ -94,7 +94,7 @@ mailListener.on("attachment", async function(att, path, seqno){
                 }
             }
             for(let i of filesToMove){
-                fs.rename(i.path, `./fileArchive/${i.name}`)
+                fs.rename(i.path, `${__dirname}/fileArchive/${i.name}`)
                 console.log(`Moved ${i.name}`)
             }
           }
