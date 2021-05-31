@@ -1,1 +1,1 @@
-forever start index.js
+forever start /home/dietpi/Framify/index.js

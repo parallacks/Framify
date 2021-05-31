@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/slideDeck', (req, res) => {
+    console.log("SlideDeck requested. Current folder:" + __dirname);
     var images=[];
     try {
         const files = fs.readdirSync("./"+mailListener.attachmentOptions.directory);
