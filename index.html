@@ -30,6 +30,10 @@
         <script>
             var images = [{image:'asdfasdfad'}];
             var index = 0;
+            function reloadPage(){
+                window.location.reload();
+            }
+
             function arrayBufferToBase64(buffer) {
                 var binary = '';
                 var bytes = [].slice.call(new Uint8Array(buffer));
@@ -72,6 +76,7 @@
             getNewImageList()
             setInterval(getNewImageList, 600000)
             setInterval(updateDisplay, 10000)
+            setInterval(reloadPage, 172800000)
         </script>
     </body>
 </html>
