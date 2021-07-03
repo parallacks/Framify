@@ -71,9 +71,30 @@
                 }
                 // console.log(images)
             })}
-            getNewImageList()
-            setInterval(getNewImageList, 3600000)
-            setInterval(updateDisplay, 60000)
+            function getImgToUpdate(){
+                fetch("http://localhost:3000/nextImg/").then((res) => res.json()).then((json) => {
+                    var base64Flag = 'data:image/jpeg;base64,';
+                    console.log(json)
+                    let img = {image: base64Flag + arrayBufferToBase64(json.data.data),
+                                height: json.height,
+                                width: json.width}
+                    let imgEl = document.getElementById("photoDisplay")
+                    if(img.width > img.height){
+                        imgEl.style.width = '100%'
+                        imgEl.style.height = 'auto'
+                    }
+                    else{
+                        imgEl.style.height = '100%'
+                        imgEl.style.width = 'auto'
+                    }
+                    imgEl.src = img.image;
+                    })
+            }
+            getImgToUpdate()
+            setInterval(getImgToUpdate, 5000)
+            // getNewImageList()
+            // setInterval(getNewImageList, 3600000)
+            // setInterval(updateDisplay, 3000)
         </script>
     </body>
 </html>

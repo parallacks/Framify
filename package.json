@@ -14,6 +14,7 @@
     "forever": "^3.0.4",
     "image-size": "^1.0.0",
     "mail-listener5": "^2.0.2",
-    "probe-image-size": "^7.2.1"
+    "probe-image-size": "^7.2.1",
+    "sharp": "^0.28.3"
   }
 }

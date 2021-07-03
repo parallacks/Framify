@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const sharp = require('sharp')
 const config = require('./config.json')
 const app = express()
 app.use(cors())
@@ -8,6 +9,7 @@ const port = 3000
 const imageSize = require('probe-image-size')
 
 var fs = require('fs');
+var index = 0;
 var { MailListener } = require("mail-listener5");   
 
 app.get('/', (req, res) => {
@@ -19,10 +21,24 @@ app.get('/slideDeck', (req, res) => {
     
     try {
         getImgs(fs.readdirSync(__dirname+"/"+mailListener.attachmentOptions.directory)).then( results => {
+            console.log(results)
             res.json(results)
         })
     
     } catch (err) {
+        console.log(err);
+        res.status(400).send("error")
+    }
+})
+app.get('/nextImg', (req, res) => {
+    try{
+        getImgs(fs.readdirSync(__dirname+"/"+mailListener.attachmentOptions.directory)).then( results => {
+            if(index+1 >= results.length)
+                index = -1;
+            index+=1;
+            res.json(results[index])
+        })
+    }catch (err) {
         console.log(err);
         res.status(400).send("error")
     }
