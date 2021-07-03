@@ -4,7 +4,7 @@ const app = express()
 app.use(cors())
 const port = 3000
 
-const imageSize = require('image-size')
+const imageSize = require('probe-image-size')
 
 var fs = require('fs');
 var { MailListener } = require("mail-listener5");   
@@ -15,31 +15,48 @@ app.get('/', (req, res) => {
 
 app.get('/slideDeck', (req, res) => {
     console.log("SlideDeck requested. Current folder:" + __dirname);
-    var images=[];
+    
     try {
-        const files = fs.readdirSync(__dirname+"/"+mailListener.attachmentOptions.directory);
-        // files object contains all files names
-        // log them on console
-        files.forEach(file => {
-            // console.log(file)
-            let dim = imageSize(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file)
-            // console.log(dim)
-            images.push({data:fs.readFileSync(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file),
-                            height: dim.height,
-                            width: dim.width})
-        });
-        
+        getImgs(fs.readdirSync(__dirname+"/"+mailListener.attachmentOptions.directory)).then( results => {
+            res.json(results)
+        })
     
     } catch (err) {
         console.log(err);
+        res.status(400).send("error")
     }
-    res.json(images)
 })
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
+async function getImgs(files){
+    var images=[];
+    
+    // files object contains all files names
+    // log them on console
+   for(let i =0; i < files.length; i++) {
+        // console.log(file)
+        file = files[i]
+        try{
+            let dim = await imageSize(require('fs').createReadStream(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file))
+            console.log(dim)
+            if(dim.orientation && dim.orientation > 5){
+            images.push({data:fs.readFileSync(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file),
+                            height: dim.width,//probe-image-size switches the height and width???
+                            width: dim.height})
+            } else {
+                images.push({data:fs.readFileSync(__dirname+"/"+mailListener.attachmentOptions.directory+"/"+file),
+                            height: dim.height,
+                            width: dim.width})
+            }
+        } catch (e){
+            console.log(e)
+        }
+    }
+    return images;
+}
 
 
 var mailListener = new MailListener({

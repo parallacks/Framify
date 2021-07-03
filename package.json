@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "forever": "^3.0.4",
     "image-size": "^1.0.0",
-    "mail-listener5": "^2.0.2"
+    "mail-listener5": "^2.0.2",
+    "probe-image-size": "^7.2.1"
   }
 }
