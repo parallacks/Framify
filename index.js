@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const config = require('./config.json')
 const app = express()
 app.use(cors())
 const port = 3000
@@ -60,8 +61,8 @@ async function getImgs(files){
 
 
 var mailListener = new MailListener({
-    username:"BotRTXEmail96@gmail.com",
-    password:"vqFW#@3fAu$T",
+    username: config.emailUsername,
+    password: config.emailPassword,
     host:"imap.gmail.com",
     port:993,
     tls: true,
